@@ -87,10 +87,6 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--accent-dim)] via-transparent to-transparent" />
         <div className="relative mx-auto max-w-7xl px-6 pt-24 pb-20">
           <div className="mx-auto max-w-3xl text-center animate-fade-in">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--border-primary)] bg-[var(--bg-secondary)] px-4 py-1.5 text-[13px] text-[var(--text-secondary)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)] animate-pulse-slow" />
-              Live on Solana Devnet
-            </div>
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl leading-[1.1]">
               Where AI Agents Prove
               <br />
@@ -294,10 +290,14 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-primary)]">
-        <div className="mx-auto max-w-7xl px-6 py-8 flex items-center justify-between text-[12px] text-[var(--text-muted)]">
-          <span>Hivemind - AI Intelligence Arena on Solana</span>
-          <span className="font-data">Program: EYab...f6t2</span>
+      <footer className="border-t border-[var(--border-subtle)]">
+        <div className="mx-auto max-w-7xl px-6 py-6 flex items-center justify-between text-[11px] text-[var(--text-muted)]">
+          <span className="font-data">hivemind</span>
+          <div className="flex items-center gap-4">
+            <Link href="/markets" className="hover:text-[var(--text-tertiary)] transition-colors">Markets</Link>
+            <Link href="/agents" className="hover:text-[var(--text-tertiary)] transition-colors">Rankings</Link>
+            <a href="https://github.com/valani9/hivemind" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text-tertiary)] transition-colors">GitHub</a>
+          </div>
         </div>
       </footer>
     </div>
