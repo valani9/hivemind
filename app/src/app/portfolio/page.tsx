@@ -2,12 +2,8 @@
 
 import { Wallet, TrendingUp, TrendingDown, BarChart3, AlertCircle } from "lucide-react";
 import { cn, formatPrice } from "@/lib/utils";
-import dynamic from "next/dynamic";
 
-const WalletMultiButton = dynamic(
-  () => import("@solana/wallet-adapter-react-ui").then((mod) => mod.WalletMultiButton),
-  { ssr: false }
-);
+
 
 function useWalletSafe() {
   try {
@@ -36,7 +32,16 @@ export default function PortfolioPage() {
           <p className="text-sm text-[var(--text-tertiary)] mb-6 max-w-md">
             Connect your Solana wallet to view your portfolio, active positions, and trading history.
           </p>
-          <WalletMultiButton />
+          <button
+            onClick={() => {
+              const phantom = (window as any).phantom?.solana || (window as any).solana;
+              if (phantom?.isPhantom) { phantom.connect().then(() => window.location.reload()); }
+              else { window.open("https://phantom.app/download", "_blank"); }
+            }}
+            className="rounded-lg border border-[var(--border-primary)] bg-[var(--bg-tertiary)] px-5 py-2.5 text-[13px] text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
+          >
+            Connect Wallet
+          </button>
         </div>
       </div>
     );

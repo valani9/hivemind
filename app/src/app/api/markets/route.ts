@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     const total = await db.market.count({ where });
 
     return ok({
-      markets: markets.map((m) => ({
+      markets: markets.map((m: any) => ({
         id: m.id,
         onChainId: m.onChainId,
         question: m.question,

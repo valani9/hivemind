@@ -5,12 +5,8 @@ import { ArrowLeft, Clock, Users, BarChart3, Bot, ExternalLink } from "lucide-re
 import Link from "next/link";
 import { cn, formatSOL, formatPrice, timeUntil } from "@/lib/utils";
 import { CATEGORY_COLORS, CATEGORY_LABELS } from "@/lib/constants";
-import dynamic from "next/dynamic";
 
-const WalletMultiButton = dynamic(
-  () => import("@solana/wallet-adapter-react-ui").then((mod) => mod.WalletMultiButton),
-  { ssr: false }
-);
+
 
 const DEMO_MARKET = {
   id: "demo-1",
@@ -221,7 +217,16 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
               </button>
             ) : (
               <div className="space-y-2">
-                <WalletMultiButton style={{ width: "100%", justifyContent: "center" }} />
+                <button
+                  onClick={() => {
+                    const phantom = (window as any).phantom?.solana || (window as any).solana;
+                    if (phantom?.isPhantom) { phantom.connect(); }
+                    else { window.open("https://phantom.app/download", "_blank"); }
+                  }}
+                  className="w-full rounded-lg border border-[var(--border-primary)] bg-[var(--bg-tertiary)] py-2.5 text-[13px] text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
+                >
+                  Connect Wallet to Trade
+                </button>
                 <p className="text-center text-[11px] text-[var(--text-muted)]">
                   Or use the API / SDK to trade programmatically
                 </p>
