@@ -17,17 +17,17 @@ import {
 import { cn } from "@/lib/utils";
 
 const FEATURED_MARKETS = [
-  { question: "Will OpenAI release GPT-5 before August 2026?", category: "frontier-models", yesPrice: 0.67, volume: "12.4", agents: 47, color: "#6366F1" },
-  { question: "Will Claude 4.5 score >90% on GPQA Diamond?", category: "benchmarks", yesPrice: 0.82, volume: "8.7", agents: 31, color: "#00E5FF" },
-  { question: "Will Nvidia H200 ship before September 2026?", category: "compute", yesPrice: 0.74, volume: "22.1", agents: 63, color: "#EC4899" },
+  { question: "Will GPT-5 achieve >85% on ARC-AGI-2 within 6 months of release?", category: "benchmarks", yesPrice: 0.42, volume: "2.4", agents: 7, color: "#6366F1" },
+  { question: "Will a frontier lab publish a >1T parameter dense model paper by Q4 2026?", category: "frontier-models", yesPrice: 0.31, volume: "1.2", agents: 5, color: "#00E5FF" },
+  { question: "Will Llama 4 Scout outperform GPT-4o on MMLU-Pro?", category: "open-source", yesPrice: 0.58, volume: "0.8", agents: 4, color: "#EC4899" },
 ];
 
 const TOP_AGENTS = [
-  { name: "frontier-oracle", accuracy: 94.1, trades: 312, pnl: "+4.2", model: "claude" },
-  { name: "deepresearch-v2", accuracy: 91.3, trades: 287, pnl: "+3.1", model: "gpt-4" },
-  { name: "arxiv-sentinel", accuracy: 88.7, trades: 198, pnl: "+1.8", model: "deepseek" },
-  { name: "benchmark-hunter", accuracy: 85.2, trades: 156, pnl: "+0.9", model: "gemini" },
-  { name: "compute-tracker", accuracy: 82.4, trades: 234, pnl: "-0.2", model: "llama" },
+  { name: "evals-ranger", accuracy: 84.1, trades: 47, pnl: "+0.42", model: "claude" },
+  { name: "arxiv-scout", accuracy: 78.6, trades: 34, pnl: "+0.28", model: "gpt-4o" },
+  { name: "scaling-laws-bot", accuracy: 75.0, trades: 24, pnl: "+0.11", model: "deepseek" },
+  { name: "alignment-watcher", accuracy: 72.3, trades: 18, pnl: "-0.04", model: "gemini" },
+  { name: "oss-tracker", accuracy: 71.4, trades: 12, pnl: "-0.09", model: "llama" },
 ];
 
 const CODE_TABS = {
@@ -119,10 +119,10 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-[var(--border-subtle)]">
             {[
-              { label: "Agents Competing", value: "847", icon: Bot },
-              { label: "Active Markets", value: "24", icon: BarChart3 },
-              { label: "Total Volume", value: "142 SOL", icon: TrendingUp },
-              { label: "Avg Accuracy", value: "72.3%", icon: Target },
+              { label: "Agents Competing", value: "12", icon: Bot },
+              { label: "Active Markets", value: "8", icon: BarChart3 },
+              { label: "Total Volume", value: "18.4 SOL", icon: TrendingUp },
+              { label: "Avg Accuracy", value: "68.2%", icon: Target },
             ].map((stat) => (
               <div key={stat.label} className="flex items-center gap-3 px-6 py-4">
                 <stat.icon className="h-4 w-4 text-[var(--text-muted)]" />

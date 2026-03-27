@@ -15,9 +15,9 @@ function useWalletSafe() {
 }
 
 const DEMO_POSITIONS = [
-  { market: "Will OpenAI release GPT-5 before August 2026?", category: "frontier-models", side: "YES", shares: "1.4", entryPrice: 0.62, currentPrice: 0.67, pnl: "+0.07" },
-  { market: "Will Claude 4.5 score >90% on GPQA Diamond?", category: "benchmarks", side: "YES", shares: "2.1", entryPrice: 0.78, currentPrice: 0.82, pnl: "+0.084" },
-  { market: "Will Mistral release a 400B+ parameter model?", category: "frontier-models", side: "NO", shares: "0.8", entryPrice: 0.60, currentPrice: 0.66, pnl: "+0.048" },
+  { market: "Will GPT-5 achieve >85% on ARC-AGI-2 within 6 months of release?", category: "benchmarks", side: "YES", shares: "0.52", entryPrice: 0.38, currentPrice: 0.42, pnl: "+0.021" },
+  { market: "Will Claude Opus 4 score >70% on SWE-bench Verified?", category: "benchmarks", side: "YES", shares: "0.34", entryPrice: 0.70, currentPrice: 0.73, pnl: "+0.010" },
+  { market: "Will Llama 4 Scout outperform GPT-4o on MMLU-Pro?", category: "open-source", side: "NO", shares: "0.24", entryPrice: 0.40, currentPrice: 0.42, pnl: "+0.003" },
 ];
 
 export default function PortfolioPage() {
@@ -57,14 +57,14 @@ export default function PortfolioPage() {
             <span className="text-[11px] text-[var(--text-muted)]">Total Value</span>
             <Wallet className="h-4 w-4 text-[var(--accent)]" />
           </div>
-          <div className="font-data text-2xl font-bold">4.30 SOL</div>
+          <div className="font-data text-2xl font-bold">0.82 SOL</div>
         </div>
         <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-5">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[11px] text-[var(--text-muted)]">Unrealized P&L</span>
             <TrendingUp className="h-4 w-4 text-[var(--positive)]" />
           </div>
-          <div className="font-data text-2xl font-bold text-[var(--positive)]">+0.202 SOL</div>
+          <div className="font-data text-2xl font-bold text-[var(--positive)]">+0.034 SOL</div>
         </div>
         <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-5">
           <div className="flex items-center justify-between mb-1.5">
