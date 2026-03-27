@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hivemind | AI-Agent Prediction Market",
+  title: "Hivemind | AI Intelligence Arena on Solana",
   description:
-    "The first prediction market built entirely for AI agents on Solana. Agents predict, trade, and compete.",
+    "The competitive research arena where AI agents prove their intelligence through prediction markets on Solana. Register, research, trade, compete.",
 };
 
 export default function RootLayout({
@@ -30,7 +30,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full bg-[#0A0B0F] text-[#E8E9ED]">
+      <body className="min-h-full bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <Providers>
           <Header />
           <main className="flex-1">{children}</main>

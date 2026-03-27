@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { Clock, Users, BarChart3 } from "lucide-react";
-import { cn, formatSOL, formatPrice, timeUntil } from "@/lib/utils";
-import { CATEGORY_COLORS } from "@/lib/constants";
+import { formatSOL, formatPrice, timeUntil } from "@/lib/utils";
+import { CATEGORY_COLORS, CATEGORY_LABELS } from "@/lib/constants";
 
 interface MarketCardProps {
   id: string;
@@ -29,63 +29,47 @@ export function MarketCard({
   status,
 }: MarketCardProps) {
   const isOpen = status === "OPEN";
-  const categoryColor = CATEGORY_COLORS[category] || CATEGORY_COLORS.other;
+  const categoryColor = CATEGORY_COLORS[category] || "#6B7280";
+  const categoryLabel = CATEGORY_LABELS[category] || category;
 
   return (
     <Link
       href={`/markets/${id}`}
-      className="group block rounded-lg border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-5 transition-all hover:border-[var(--border-active)] hover:bg-[var(--bg-tertiary)]"
+      className="group block rounded-xl border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-5 transition-all hover:border-[var(--border-active)] hover:bg-[var(--bg-tertiary)]"
     >
-      {/* Category + Status */}
       <div className="mb-3 flex items-center justify-between">
         <span
-          className="rounded-md px-2 py-0.5 text-xs font-medium"
-          style={{
-            color: categoryColor,
-            backgroundColor: categoryColor + "20",
-          }}
+          className="rounded-md px-2 py-0.5 text-[11px] font-medium"
+          style={{ color: categoryColor, backgroundColor: categoryColor + "18" }}
         >
-          {category}
+          {categoryLabel}
         </span>
-        <span
-          className={cn(
-            "flex items-center gap-1.5 text-xs",
-            isOpen ? "text-[var(--positive)]" : "text-[var(--text-tertiary)]"
-          )}
-        >
-          {isOpen && <span className="h-1.5 w-1.5 rounded-full bg-[var(--positive)] animate-pulse" />}
-          {status}
-        </span>
+        {isOpen && (
+          <span className="flex items-center gap-1 text-[11px] text-[var(--positive)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--positive)] animate-pulse-slow" />
+            Open
+          </span>
+        )}
       </div>
 
-      {/* Question */}
-      <h3 className="mb-4 text-sm font-medium leading-snug line-clamp-2 group-hover:text-[var(--accent)] transition-colors">
+      <h3 className="mb-4 text-[13px] font-medium leading-snug line-clamp-2 group-hover:text-[var(--accent)] transition-colors">
         {question}
       </h3>
 
-      {/* Price Bars */}
-      <div className="mb-4 space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-[var(--positive)]">YES</span>
-          <span className="font-data text-[var(--positive)]">{formatPrice(yesPrice)}</span>
+      <div className="mb-4">
+        <div className="flex items-center justify-between text-[11px] mb-1.5">
+          <span className="text-[var(--positive)] font-data">YES {formatPrice(yesPrice)}</span>
+          <span className="text-[var(--negative)] font-data">NO {formatPrice(noPrice)}</span>
         </div>
-        <div className="h-2 w-full rounded-full bg-[var(--bg-primary)] overflow-hidden">
+        <div className="h-1.5 w-full rounded-full bg-[var(--bg-primary)] overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: `${yesPrice * 100}%`,
-              background: `linear-gradient(90deg, var(--positive), var(--accent))`,
-            }}
+            className="h-full rounded-full bg-gradient-to-r from-[var(--positive)] to-[var(--accent)] transition-all duration-700"
+            style={{ width: `${yesPrice * 100}%` }}
           />
-        </div>
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-[var(--negative)]">NO</span>
-          <span className="font-data text-[var(--negative)]">{formatPrice(noPrice)}</span>
         </div>
       </div>
 
-      {/* Stats Row */}
-      <div className="flex items-center justify-between text-xs text-[var(--text-tertiary)]">
+      <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)]">
         <span className="flex items-center gap-1 font-data">
           <BarChart3 className="h-3 w-3" />
           {formatSOL(BigInt(totalVolumeLamports))} SOL
