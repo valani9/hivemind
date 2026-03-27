@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Agent {
+  id            String    @id @default(cuid())
+  walletAddress String    @unique @map("wallet_address")
+  name          String
+  description   String?
+  modelProvider String?   @map("model_provider")
+  isVerified    Boolean   @default(false) @map("is_verified")
+  isActive      Boolean   @default(true) @map("is_active")
+  onChainPda    String?   @unique @map("on_chain_pda")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  apiKeys        AgentApiKey[]
+  positions      Position[]
+  trades         Trade[]
+  webhooks       Webhook[]
+  stats          AgentStats?
+  createdMarkets Market[]     @relation("MarketCreator")
+
+  @@index([walletAddress])
+  @@index([isActive])
+  @@map("agents")
+}
+
+model AgentApiKey {
+  id          String    @id @default(cuid())
+  agentId     String    @map("agent_id")
+  keyHash     String    @unique @map("key_hash")
+  keyPrefix   String    @map("key_prefix")
+  label       String    @default("default")
+  permissions String[]  @default(["read", "trade"])
+  lastUsedAt  DateTime? @map("last_used_at")
+  expiresAt   DateTime? @map("expires_at")
+  isRevoked   Boolean   @default(false) @map("is_revoked")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@index([keyHash])
+  @@index([agentId, isRevoked])
+  @@map("agent_api_keys")
+}
+
+model AgentStats {
+  id                    String   @id @default(cuid())
+  agentId               String   @unique @map("agent_id")
+  totalTrades           Int      @default(0) @map("total_trades")
+  totalVolumeLamports   BigInt   @default(0) @map("total_volume_lamports")
+  marketsParticipated   Int      @default(0) @map("markets_participated")
+  marketsCreated        Int      @default(0) @map("markets_created")
+  correctPredictions    Int      @default(0) @map("correct_predictions")
+  totalPredictions      Int      @default(0) @map("total_predictions")
+  accuracyRate          Float    @default(0) @map("accuracy_rate")
+  realizedPnlLamports   BigInt   @default(0) @map("realized_pnl_lamports")
+  unrealizedPnlLamports BigInt   @default(0) @map("unrealized_pnl_lamports")
+  reputationScore       Float    @default(500) @map("reputation_score")
+  rank                  Int?
+  lastCalculatedAt      DateTime @default(now()) @map("last_calculated_at")
+
+  agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@index([reputationScore(sort: Desc)])
+  @@index([accuracyRate(sort: Desc)])
+  @@map("agent_stats")
+}
+
+model Market {
+  id                  String        @id @default(cuid())
+  onChainId           Int           @unique @map("on_chain_id")
+  onChainAddress      String        @unique @map("on_chain_address")
+  question            String
+  description         String?
+  category            String        @default("general")
+  tags                String[]      @default([])
+  creatorId           String?       @map("creator_id")
+  resolutionCriteria  String?       @map("resolution_criteria")
+  status              MarketStatus  @default(OPEN)
+  outcome             MarketOutcome?
+
+  yesPrice            Float         @default(0.5) @map("yes_price")
+  noPrice             Float         @default(0.5) @map("no_price")
+  totalVolumeLamports BigInt        @default(0) @map("total_volume_lamports")
+  liquidityParam      BigInt        @map("liquidity_param")
+  numTraders          Int           @default(0) @map("num_traders")
+
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  closesAt     DateTime  @map("closes_at")
+  resolvesAt   DateTime? @map("resolves_at")
+  resolvedAt   DateTime? @map("resolved_at")
+  lastSyncSlot BigInt    @default(0) @map("last_sync_slot")
+
+  creator      Agent?          @relation("MarketCreator", fields: [creatorId], references: [id])
+  positions    Position[]
+  trades       Trade[]
+  priceHistory PriceSnapshot[]
+
+  @@index([status])
+  @@index([category])
+  @@index([closesAt])
+  @@index([totalVolumeLamports(sort: Desc)])
+  @@map("markets")
+}
+
+enum MarketStatus {
+  OPEN
+  CLOSED
+  RESOLVED
+  VOIDED
+}
+
+enum MarketOutcome {
+  YES
+  NO
+  VOID
+}
+
+model PriceSnapshot {
+  id        String   @id @default(cuid())
+  marketId  String   @map("market_id")
+  yesPrice  Float    @map("yes_price")
+  noPrice   Float    @map("no_price")
+  volume    BigInt   @default(0)
+  timestamp DateTime @default(now())
+
+  market Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+
+  @@index([marketId, timestamp(sort: Desc)])
+  @@map("price_snapshots")
+}
+
+model Trade {
+  id            String   @id @default(cuid())
+  marketId      String   @map("market_id")
+  agentId       String   @map("agent_id")
+  side          String
+  direction     String
+  sharesAmount  BigInt   @map("shares_amount")
+  costLamports  BigInt   @map("cost_lamports")
+  pricePerShare Float    @map("price_per_share")
+  feeLamports   BigInt   @default(0) @map("fee_lamports")
+  txSignature   String   @unique @map("tx_signature")
+  slot          BigInt
+  timestamp     DateTime @default(now())
+
+  market Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  agent  Agent  @relation(fields: [agentId], references: [id])
+
+  @@index([marketId, timestamp(sort: Desc)])
+  @@index([agentId, timestamp(sort: Desc)])
+  @@map("trades")
+}
+
+model Position {
+  id             String  @id @default(cuid())
+  marketId       String  @map("market_id")
+  agentId        String  @map("agent_id")
+  yesShares      BigInt  @default(0) @map("yes_shares")
+  noShares       BigInt  @default(0) @map("no_shares")
+  totalCostBasis BigInt  @default(0) @map("total_cost_basis")
+  claimed        Boolean @default(false)
+
+  market Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  agent  Agent  @relation(fields: [agentId], references: [id])
+
+  @@unique([marketId, agentId])
+  @@index([agentId])
+  @@map("positions")
+}
+
+model Webhook {
+  id           String   @id @default(cuid())
+  agentId      String   @map("agent_id")
+  url          String
+  secret       String
+  events       String[] @default(["market:new_trade", "market:resolved"])
+  isActive     Boolean  @default(true) @map("is_active")
+  failureCount Int      @default(0) @map("failure_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@index([agentId, isActive])
+  @@map("webhooks")
+}

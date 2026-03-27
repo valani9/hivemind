@@ -1,0 +1,20 @@
+{
+  "name": "@hivemind/mcp-server",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "bin": {
+    "hivemind-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  }
+}

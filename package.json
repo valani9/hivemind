@@ -1,0 +1,13 @@
+{
+  "name": "hivemind",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter app dev",
+    "build": "turbo build",
+    "test": "turbo test"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0"
+  }
+}
