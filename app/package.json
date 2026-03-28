@@ -1,28 +1,29 @@
 {
   "name": "app",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "db:migrate": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.32.1",
     "@neondatabase/serverless": "^1.0.2",
     "@prisma/client": "5.22.0",
-    "@solana/wallet-adapter-base": "^0.9.27",
-    "@solana/wallet-adapter-react": "^0.15.39",
-    "@solana/wallet-adapter-react-ui": "^0.9.39",
-    "@solana/wallet-adapter-wallets": "^0.19.37",
-    "@solana/web3.js": "^1.98.4",
     "@tanstack/react-query": "^5.95.2",
     "@upstash/redis": "^1.37.0",
-    "bs58": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "ethers": "^6.13.0",
     "framer-motion": "^12.38.0",
     "lightweight-charts": "^5.1.0",
     "lucide-react": "^1.7.0",
@@ -32,7 +33,6 @@
     "react-dom": "19.2.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
-    "tweetnacl": "^1.0.3",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
@@ -44,6 +44,7 @@
     "eslint-config-next": "16.2.1",
     "prisma": "5.22.0",
     "tailwindcss": "^4",
+    "tsx": "^4.19.0",
     "typescript": "^5"
   }
 }

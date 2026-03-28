@@ -8,23 +8,26 @@ datasource db {
 }
 
 model Agent {
-  id            String    @id @default(cuid())
-  walletAddress String    @unique @map("wallet_address")
+  id            String   @id @default(cuid())
+  walletAddress String   @unique @map("wallet_address")
   name          String
   description   String?
-  modelProvider String?   @map("model_provider")
-  isVerified    Boolean   @default(false) @map("is_verified")
-  isActive      Boolean   @default(true) @map("is_active")
-  onChainPda    String?   @unique @map("on_chain_pda")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  modelProvider String?  @map("model_provider")
+  isVerified    Boolean  @default(false) @map("is_verified")
+  isActive      Boolean  @default(true)  @map("is_active")
+  onChainPda    String?  @unique @map("on_chain_pda")
+  agentTokenId  Int?     @unique @map("agent_token_id")
+  agentCardCID  String?  @map("agent_card_cid")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt      @map("updated_at")
 
   apiKeys        AgentApiKey[]
   positions      Position[]
   trades         Trade[]
   webhooks       Webhook[]
   stats          AgentStats?
-  createdMarkets Market[]     @relation("MarketCreator")
+  createdMarkets Market[]      @relation("MarketCreator")
+  activities     AgentActivity[]
 
   @@index([walletAddress])
   @@index([isActive])
@@ -74,26 +77,26 @@ model AgentStats {
 }
 
 model Market {
-  id                  String        @id @default(cuid())
-  onChainId           Int           @unique @map("on_chain_id")
-  onChainAddress      String        @unique @map("on_chain_address")
+  id                  String   @id @default(cuid())
+  onChainId           Int      @unique @map("on_chain_id")
+  onChainAddress      String   @unique @map("on_chain_address")
   question            String
   description         String?
-  category            String        @default("general")
-  tags                String[]      @default([])
-  creatorId           String?       @map("creator_id")
-  resolutionCriteria  String?       @map("resolution_criteria")
-  status              MarketStatus  @default(OPEN)
-  outcome             MarketOutcome?
+  category            String   @default("general")
+  tags                String[] @default([])
+  creatorId           String?  @map("creator_id")
+  resolutionCriteria  String?  @map("resolution_criteria")
+  status              String   @default("OPEN")
+  outcome             String?
 
-  yesPrice            Float         @default(0.5) @map("yes_price")
-  noPrice             Float         @default(0.5) @map("no_price")
-  totalVolumeLamports BigInt        @default(0) @map("total_volume_lamports")
-  liquidityParam      BigInt        @map("liquidity_param")
-  numTraders          Int           @default(0) @map("num_traders")
+  yesPrice            Float  @default(0.5) @map("yes_price")
+  noPrice             Float  @default(0.5) @map("no_price")
+  totalVolumeLamports BigInt @default(0)   @map("total_volume_lamports")
+  liquidityParam      BigInt @map("liquidity_param")
+  numTraders          Int    @default(0)   @map("num_traders")
 
   createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  updatedAt    DateTime  @updatedAt      @map("updated_at")
   closesAt     DateTime  @map("closes_at")
   resolvesAt   DateTime? @map("resolves_at")
   resolvedAt   DateTime? @map("resolved_at")
@@ -109,19 +112,6 @@ model Market {
   @@index([closesAt])
   @@index([totalVolumeLamports(sort: Desc)])
   @@map("markets")
-}
-
-enum MarketStatus {
-  OPEN
-  CLOSED
-  RESOLVED
-  VOIDED
-}
-
-enum MarketOutcome {
-  YES
-  NO
-  VOID
 }
 
 model PriceSnapshot {
@@ -177,6 +167,27 @@ model Position {
   @@map("positions")
 }
 
+/// Audit log of autonomous agent actions — every entry has a Filecoin CID
+model AgentActivity {
+  id          String   @id @default(cuid())
+  agentId     String?  @map("agent_id")
+  agentName   String   @map("agent_name")
+  agentWallet String   @map("agent_wallet")
+  type        String
+  description String
+  txHash      String?  @map("tx_hash")
+  filecoinCID String?  @map("filecoin_cid")
+  marketId    Int?     @map("market_id")
+  timestamp   DateTime @default(now())
+
+  agent Agent? @relation(fields: [agentId], references: [id])
+
+  @@index([timestamp(sort: Desc)])
+  @@index([agentWallet])
+  @@index([type])
+  @@map("agent_activities")
+}
+
 model Webhook {
   id           String   @id @default(cuid())
   agentId      String   @map("agent_id")
@@ -184,7 +195,7 @@ model Webhook {
   secret       String
   events       String[] @default(["market:new_trade", "market:resolved"])
   isActive     Boolean  @default(true) @map("is_active")
-  failureCount Int      @default(0) @map("failure_count")
+  failureCount Int      @default(0)    @map("failure_count")
   createdAt    DateTime @default(now()) @map("created_at")
 
   agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)

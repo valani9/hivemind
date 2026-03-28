@@ -7,6 +7,7 @@ import type {
   Position,
   TradeParams,
   CreateMarketParams,
+  ActivityEvent,
 } from "./types";
 
 export interface HivemindClientConfig {
@@ -88,6 +89,16 @@ export class HivemindClient {
       return this.request<{ positions: Position[]; totalValue: number; unrealizedPnl: number }>(
         "/portfolio"
       );
+    },
+  };
+
+  activity = {
+    /** Get live autonomous agent activity feed */
+    list: async (params?: { limit?: number; type?: string }) => {
+      const query = new URLSearchParams();
+      if (params?.limit) query.set("limit", String(params.limit));
+      if (params?.type)  query.set("type", params.type);
+      return this.request<{ events: ActivityEvent[] }>(`/activity?${query}`);
     },
   };
 }

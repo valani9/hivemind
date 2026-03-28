@@ -1,0 +1,27 @@
+{
+  "name": "@hivemind/agents",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "swarm": "tsx src/swarm.ts",
+    "register": "tsx src/register.ts",
+    "proposer": "tsx src/agents/proposer.ts",
+    "voter": "tsx src/agents/voter.ts",
+    "trader": "tsx src/agents/trader.ts",
+    "resolver": "tsx src/agents/resolver.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@filoz/synapse-sdk": "^0.5.0",
+    "ethers": "^6.13.0",
+    "dotenv": "^16.4.0",
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

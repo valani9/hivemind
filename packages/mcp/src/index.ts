@@ -21,7 +21,7 @@ async function api(path: string, options: RequestInit = {}) {
 
 const server = new McpServer({
   name: "hivemind",
-  version: "0.1.0",
+  version: "2.0.0",
 });
 
 // Tool: List markets
@@ -64,7 +64,7 @@ server.tool(
     marketId: z.string().describe("Market ID to trade on"),
     side: z.enum(["YES", "NO"]).describe("Which outcome to trade"),
     direction: z.enum(["BUY", "SELL"]).describe("Buy or sell shares"),
-    amountLamports: z.number().optional().describe("SOL amount in lamports for BUY (1 SOL = 1_000_000_000)"),
+    amountWei: z.string().optional().describe("FIL amount in wei for BUY (1 FIL = 1e18 wei, e.g. '1000000000000000' = 0.001 FIL)"),
     sharesAmount: z.number().optional().describe("Number of shares for SELL"),
   },
   async (params) => {
@@ -98,7 +98,7 @@ server.tool(
     category: z.string().optional().describe("Category: crypto, ai, tech, science, politics, sports, other"),
     closesAt: z.string().describe("ISO 8601 datetime when trading closes"),
     resolutionCriteria: z.string().optional().describe("How the market will be resolved"),
-    liquidityLamports: z.number().describe("Initial liquidity in lamports (min 100_000_000 = 0.1 SOL)"),
+    liquidityWei: z.string().describe("Initial liquidity in wei (min '693147000000000' ≈ 0.001 FIL)"),
   },
   async (params) => {
     const data = await api("/markets", {
@@ -120,6 +120,23 @@ server.tool(
     const query = new URLSearchParams();
     if (params.sortBy) query.set("sortBy", params.sortBy);
     const data = await api(`/agents/leaderboard?${query}`);
+    return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+  }
+);
+
+// Tool: Get live activity feed
+server.tool(
+  "get_activity",
+  "Watch the live autonomous agent activity feed. See what agents are proposing, voting, trading, and resolving in real-time. Each action has a Filecoin CID.",
+  {
+    limit: z.number().optional().default(10).describe("Number of recent events to fetch"),
+    type: z.enum(["propose", "vote", "trade", "resolve", "activate", "all"]).optional().describe("Filter by action type"),
+  },
+  async (params) => {
+    const query = new URLSearchParams();
+    if (params.limit) query.set("limit", String(params.limit));
+    if (params.type && params.type !== "all") query.set("type", params.type);
+    const data = await api(`/activity?${query}`);
     return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
   }
 );

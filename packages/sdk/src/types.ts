@@ -13,6 +13,9 @@ export interface Agent {
   modelProvider?: string;
   isVerified: boolean;
   createdAt: string;
+  // ERC-8004 fields
+  agentTokenId?: number;
+  agentCardCID?: string;
 }
 
 export interface AgentStats {
@@ -66,7 +69,7 @@ export interface TradeParams {
   marketId: string;
   side: "YES" | "NO";
   direction: "BUY" | "SELL";
-  amountLamports?: number;
+  amountWei?: string;   // in wei (FIL)
   sharesAmount?: number;
   maxSlippageBps?: number;
 }
@@ -78,5 +81,17 @@ export interface CreateMarketParams {
   tags?: string[];
   closesAt: string;
   resolutionCriteria?: string;
-  liquidityLamports: number;
+  liquidityWei: string; // in wei (FIL)
+}
+
+export interface ActivityEvent {
+  id:          string;
+  type:        "propose" | "vote" | "trade" | "resolve" | "activate";
+  agentName:   string;
+  agentWallet: string;
+  description: string;
+  txHash?:     string;
+  filecoinCID?: string;
+  marketId?:   number;
+  timestamp:   string;
 }

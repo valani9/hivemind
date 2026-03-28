@@ -1,0 +1,11 @@
+{
+  "network": "calibration",
+  "chainId": 314159,
+  "deployedAt": "2026-03-28T03:22:00.936Z",
+  "deployer": "0x57124f611BC6cc5a0b714E610173230B19A0cDe2",
+  "AgentRegistry": "0x51bB21fB7946512303B06a682B035de8fCE93Dd9",
+  "ReputationLedger": "0x6C4470a64Ee22083493Afb645bBBBae19e41A934",
+  "HivemindMarket": "0xD92EF5282f6206C663cB20ad41843cf10b66Be42",
+  "ConsensusResolver": "0xe3b4a816E95b14427294a7b35761d09a828c9a26",
+  "MarketGovernance": "0x9608136A6421c69A0998c12Fc6a8F0406B8ABc72"
+}
