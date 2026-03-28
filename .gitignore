@@ -10,3 +10,4 @@ target/
 .vercel
 .turbo
 anchor/target/
+DEMO_SCRIPT.md
